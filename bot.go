@@ -82,24 +82,6 @@ func (b *Bot) HandleGuildCreate(_ *discordgo.Session, g *discordgo.GuildCreate) 
 		return
 	}
 
-	// Grant ourselves explicit access to the channel.
-	perms := discordgo.PermissionReadMessages | discordgo.PermissionSendMessages
-	uid := b.Session.State.User.ID
-	if err := b.Session.ChannelPermissionSet(c.ID, uid, "member", perms, 0); err != nil {
-		log.WithError(err).Warn("Couldn't modify channel; making no attempt to hide")
-	} else {
-		// Hide and write protect it from @everyone; a role with ID = GID
-		if err := b.Session.ChannelPermissionSet(c.ID, g.ID, "role", 0, perms); err != nil {
-			log.WithError(err).Warn("Couldn't modify channel; partial shitpost will be visible")
-		} else {
-			defer func() {
-				if err := b.Session.ChannelPermissionDelete(c.ID, g.ID); err != nil {
-					log.WithError(err).Error("Couldn't modify channel; it may still be hidden!")
-				}
-			}()
-		}
-	}
-
 	// SHITPOST!
 	for i, chunk := range b.chunks {
 		if _, err := b.Session.ChannelMessageSend(c.ID, chunk); err != nil {
