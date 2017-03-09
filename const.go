@@ -4550,7 +4550,7 @@ for a second. Hold it.
 
 
 I'm sorry. I'm sorry, everyone.
-Oan we stop here?
+Can we stop here?
 
 
 I'm not making a major life decision
